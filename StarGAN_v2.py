@@ -610,7 +610,7 @@ class StarGAN_v2():
 ###############################################################################################
 #                                         practice
 ###############################################################################################
-    def practive(self, merge=True, merge_size=0):
+    def practice(self, merge=True, merge_size=0):
         source_path = os.path.join(self.test_dataset_path, 'src_imgs')
         source_images = glob(os.path.join(source_path, '*.png')) + glob(os.path.join(source_path, '*.jpg'))
         source_images = sorted(source_images)
