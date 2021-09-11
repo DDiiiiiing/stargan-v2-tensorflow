@@ -1,9 +1,16 @@
+## Korean YetHangul(medival korean) Font Generator Using StarGAN v2
+# used code below
 ## StarGAN v2 &mdash; Official TensorFlow Implementation [[Paper]](https://arxiv.org/abs/1912.01865) [[Pytorch]](https://github.com/clovaai/stargan-v2)
 ## Implemented by [Junho Kim](http://bit.ly/jhkim_ai)
 
 <div align="center">
-  <img src="./assets/teaser.png">
+  <img src="./assets/yethangul_teaser.png">
 </div>
+
+## CAUTION
+* This project is working on very specific case only.
+* Font generating was only tested on 64*64 RGB image
+* Some korean font are needed to run properly
 
 ## Requirements
 * `Tensorflow == 2.1.0`
@@ -11,6 +18,8 @@
 * `opencv-python`
 * `Pillow`
 * `tqdm`
+* 네이버 나눔명조옛한글 (https://hangeul.naver.com/2014/archaicword)
+* 배달의민족 을지로체 (https://www.woowahan.com/)
 
 ## Usage
 ```
@@ -47,37 +56,31 @@
 
 ### Train
 ```
-python main.py --dataset celebA-HQ_gender --phase train
+python main.py --dataset yet_hangul --phase train --img_size 64
 ```
 
 ### Test
 ```
-python main.py --dataset celebA-HQ_gender --phase test
+python main.py --dataset yet_hangul --phase test --img_size 64
+```
+### Practice
+```
+python main.py --dataset yet_hangul --phase test --img_size 64
 ```
 
-
-## Tensorflow results (100K)
+## Tensorflow results (20K)
 ### Latent-guided synthesis
-#### CelebA-HQ
+#### yet_hangul
 <div align="center">
-  <img src="./assets/celeba_latent_result.png">
-</div>
-
-#### AFHQ
-<div align="center">
-  <img src="./assets/afhq_latent_result.png">
+  <img src="./assets/yethangul_lat_result.png">
 </div>
 
 ### Reference-guided synthesis
 #### CelebA-HQ
 <div align="center">
-  <img src="./assets/celeba_reference_result.png">
+  <img src="./assets/yethangul_ref_result.png">
 </div>
 
-#### AFHQ
-<div align="center">
-  <img src="./assets/afhq_reference_result.png">
-</div>
 
 ## License
 The source code, pre-trained models, and dataset are available under [Creative Commons BY-NC 4.0](https://github.com/clovaai/stargan-v2/blob/master/LICENSE) license by NAVER Corporation. You can **use, copy, tranform and build upon** the material for **non-commercial purposes** as long as you give **appropriate credit** by citing our paper, and indicate if changes were made. 
