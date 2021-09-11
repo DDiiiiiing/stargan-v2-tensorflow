@@ -18,6 +18,7 @@ from tqdm.contrib import tenumerate
 from networks import *
 from copy import deepcopy
 import PIL.Image
+import Font2Image as F2I
 
 class StarGAN_v2():
     def __init__(self, args):
@@ -87,6 +88,7 @@ class StarGAN_v2():
 
         self.dataset_path = os.path.join(dataset_path, self.dataset_name, 'train')
         self.test_dataset_path = os.path.join(dataset_path, self.dataset_name, 'test')
+        self.practice_dataset_path = os.path.join(dataset_path, self.dataset_name, 'practice')
         self.domain_list = sorted([os.path.basename(x) for x in glob(self.dataset_path + '/*')])
         self.num_domains = len(self.domain_list)
 
@@ -611,7 +613,12 @@ class StarGAN_v2():
 #                                         practice
 ###############################################################################################
     def practice(self, merge=True, merge_size=0):
-        source_path = os.path.join(self.test_dataset_path, 'src_imgs')
+        source_path = os.path.join(self.practice_dataset_path, 'src_imgs')
+
+        # generate source image
+        unicode_list = self.read_text()
+        F2I.save_dataset(source_path=source_path, unicode_list=unicode_list)
+
         source_images = glob(os.path.join(source_path, '*.png')) + glob(os.path.join(source_path, '*.jpg'))
         source_images = sorted(source_images)
 
@@ -751,3 +758,16 @@ class StarGAN_v2():
 
             self.latent_canvas(src_img, save_path)
 
+    def read_text(self) :
+        file_path = os.path.join(self.practice_dataset_path, 'text.txt')
+        unicode_list = []
+
+        f = open(file_path, mode='r', encoding='utf-8')
+        while True:
+            c = f.read(1)
+            if not c: 
+                break
+            unicode_list.append(hex(ord(c)))
+        f.close()
+        
+        return unicode_list

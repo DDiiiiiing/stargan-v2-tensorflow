@@ -29,22 +29,31 @@ def char_in_font(unicode_char, font):
     return False
 
 
-def save_string(unicode_list, font: str="NanumMyeongjo.ttf", canvas_size: int=64, x_offset: int=4, y_offset: int=4):
+def save_dataset(source_path: str, unicode_list: tuple, font: str="NanumMyeongjo-YetHangul.ttf", canvas_size: int=64, x_offset: int=4, y_offset: int=4):
     ''' 폰트의 모든 이미지에 대한 데이터. 각 폰트가 하나의 도메인 jpg 로 저장 '''
     file_num = 0
     for i in unicode_list: #list from text.txt
         #check is font missing     
+
+        # not korean
         if not char_in_font(chr(i), TTFont(os.path.join(font_root, font))): 
-            # not korean
             continue
         char_img = draw_single_char(ch=chr(i), font=font, canvas_size=canvas_size, x_offset=x_offset, y_offset=y_offset)
+
+        # korean, but font not compatible
         if np.sum(np.asarray(char_img))>255*3*canvas_size*canvas_size*0.99:
-            # korean, but font not compatible
+            continue
+        
+        #line feed
+        if i == '0xa':   
             continue
 
         img = centering_img(char_img)
-        img.save(os.path.join("dataset/yet_hangul/train", font.split('.')[0], str(file_num).zfill(5) + ".jpg"), 'jpeg')
+        img.save(os.path.join(source_path, str(file_num).zfill(5) + ".jpg"), 'jpeg')
         file_num+=1
+    
+    print("generate source image finished!")
+
 
 def padding_img(img: np.ndarray, pad_l, pad_t, pad_r, pad_b):
     height, width, depth = img.shape
@@ -65,6 +74,7 @@ def padding_img(img: np.ndarray, pad_l, pad_t, pad_r, pad_b):
     img = np.concatenate((img, pad_bottom), axis = 0)
 
     return img
+
 
 def centering_img(img: Image.Image):
     img_arr = np.asarray(img)
@@ -87,15 +97,3 @@ def centering_img(img: Image.Image):
     img_ret = Image.fromarray(img_pad, 'RGB')
 
     return img_ret
-
-#modify range of unicode 
-char_list = (0xE166, 0XE202, 0XE197, 0XEEAE)
-i = 100
-for c in char_list:
-    nanum = draw_single_char(ch=chr(c), font='NanumMyeongjo-YetHangul.ttf')
-    myungjo = draw_single_char(ch=chr(c), font='NanumBarunGothic-YetHangul_0.ttf')
-    nanum_cen = centering_img(nanum)
-    myungjo_cen = centering_img(myungjo)
-    nanum_cen.save(os.path.join("NanumMyeongjo-YetHangul", str(i).zfill(5) + ".jpg"), 'jpeg')
-    myungjo_cen.save(os.path.join("NanumBarunGothic-YetHangul_0", str(i).zfill(5) + ".jpg"), 'jpeg')
-    i+=1
