@@ -1,4 +1,5 @@
 import os
+from unicodedata import unidata_version
 import numpy as np
 from PIL import Image
 from PIL import ImageDraw
@@ -29,23 +30,23 @@ def char_in_font(unicode_char, font):
     return False
 
 
-def save_dataset(source_path: str, unicode_list: tuple, font: str="NanumMyeongjo-YetHangul.ttf", canvas_size: int=64, x_offset: int=4, y_offset: int=4):
+def save_dataset(source_path: str, unicode_list, font: str="NanumMyeongjo-YetHangul.ttf", canvas_size: int=64, x_offset: int=4, y_offset: int=4):
     ''' 폰트의 모든 이미지에 대한 데이터. 각 폰트가 하나의 도메인 jpg 로 저장 '''
     file_num = 0
-    for i in unicode_list: #list from text.txt
+    for c in unicode_list: #list from text.txt
         #check is font missing     
-
         # not korean
-        if not char_in_font(chr(i), TTFont(os.path.join(font_root, font))): 
+        if not char_in_font(c, TTFont(os.path.join(font_root, font))): 
             continue
-        char_img = draw_single_char(ch=chr(i), font=font, canvas_size=canvas_size, x_offset=x_offset, y_offset=y_offset)
+
+        char_img = draw_single_char(ch=c, font=font, canvas_size=canvas_size, x_offset=x_offset, y_offset=y_offset)
 
         # korean, but font not compatible
         if np.sum(np.asarray(char_img))>255*3*canvas_size*canvas_size*0.99:
             continue
         
         #line feed
-        if i == '0xa':   
+        if c == '0xa':   
             continue
 
         img = centering_img(char_img)

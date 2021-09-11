@@ -16,7 +16,7 @@ from utils import *
 def parse_args():
     desc = "Tensorflow implementation of StarGAN_v2"
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('--phase', type=str, default='train', help='train or test ?')
+    parser.add_argument('--phase', type=str, default='train', help='train or test or practice?')
     parser.add_argument('--merge', type=str2bool, default=True, help='In test phase, merge reference-guided image result or not')
     parser.add_argument('--merge_size', type=int, default=0, help='merge size matching number')
     parser.add_argument('--dataset', type=str, default='celeba_hq_gender', help='dataset_name')
@@ -107,9 +107,16 @@ def main():
         gan.train()
         print(" [*] Training finished!")
 
-    else :
+    elif args.phase == 'test' :
         gan.test(args.merge, args.merge_size)
         print(" [*] Test finished!")
+
+    elif args.phase == 'practice' :
+        gan.practice()
+        print(" [*] Practice finished!")
+
+    else:
+        print(" unknown params!")
 
 def GPU_setting():
     # memory footprint support libraries/code
