@@ -1,7 +1,7 @@
-## Korean YetHangul(medival korean) Font Generator Using StarGAN v2
-# used code below
-## StarGAN v2 &mdash; Official TensorFlow Implementation [[Paper]](https://arxiv.org/abs/1912.01865) [[Pytorch]](https://github.com/clovaai/stargan-v2)
-## Implemented by [Junho Kim](http://bit.ly/jhkim_ai)
+# Korean YetHangul(medival korean) Font Generator Using StarGAN v2
+## used code below
+### StarGAN v2 &mdash; Official TensorFlow Implementation [[Paper]](https://arxiv.org/abs/1912.01865) [[Pytorch]](https://github.com/clovaai/stargan-v2)
+### Implemented by [Junho Kim](http://bit.ly/jhkim_ai)
 
 <div align="center">
   <img src="./assets/yethangul_teaser.jpg">
@@ -11,6 +11,7 @@
 * This project is working on very specific case only.
 * Font generating was only tested on 64*64 RGB image
 * Some korean font are needed to run properly
+* Before training, you must generate dataset 
 
 ## Requirements
 * `Tensorflow == 2.1.0`
@@ -18,8 +19,14 @@
 * `opencv-python`
 * `Pillow`
 * `tqdm`
+* `gpuutil`
+* `humanize`
+* `fonttools`
 * 네이버 나눔명조옛한글 (https://hangeul.naver.com/2014/archaicword)
-* 배달의민족 을지로체 (https://www.woowahan.com/)
+* 네이버 나눔바른고딕옛한글 (https://hangeul.naver.com/2014/archaicword) optional
+* 배달의민족 을지로체 (https://www.woowahan.com/) optional
+* 네이버 나눔고딕 (https://hangeul.naver.com/font) optional
+* 네이버 나눔고딕 (https://hangeul.naver.com/font) optional
 
 ## Usage
 ```
@@ -52,6 +59,14 @@
                ├── src1.jpg 
                ├── src2.png
                ├── ...
+
+        ├── practice
+           ├── ref_imgs (domain folder)
+               ├── domain1 (domain folder <<-- target font style)
+                   ├── ttt.jpg (domain1 image <<-- 1 image. more than 1 is meaningless)
+
+           ├── src_imgs (<<-- will be automatically generated)
+               ├── text.txt (characters you want to generate)
 ```
 
 ### Train
@@ -66,6 +81,10 @@ python main.py --dataset yet_hangul --phase test --img_size 64
 ### Practice
 ```
 python main.py --dataset yet_hangul --phase test --img_size 64
+```
+### GenerateDataset.ipynb
+```
+click RUN ALL button...
 ```
 
 ## Tensorflow results (20K)
