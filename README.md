@@ -4,7 +4,7 @@
 ## Implemented by [Junho Kim](http://bit.ly/jhkim_ai)
 
 <div align="center">
-  <img src="./assets/yethangul_teaser.png">
+  <img src="./assets/yethangul_teaser.jpg">
 </div>
 
 ## CAUTION
@@ -72,13 +72,13 @@ python main.py --dataset yet_hangul --phase test --img_size 64
 ### Latent-guided synthesis
 #### yet_hangul
 <div align="center">
-  <img src="./assets/yethangul_lat_result.png">
+  <img src="./assets/yethangul_lat_result.jpg">
 </div>
 
 ### Reference-guided synthesis
 #### CelebA-HQ
 <div align="center">
-  <img src="./assets/yethangul_ref_result.png">
+  <img src="./assets/yethangul_ref_result.jpg">
 </div>
 
 
