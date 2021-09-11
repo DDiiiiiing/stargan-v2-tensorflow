@@ -615,6 +615,12 @@ class StarGAN_v2():
 ###############################################################################################
     def practice(self):
         source_path = os.path.join(self.practice_dataset_path, 'src_imgs')
+        # clear src_imgs folder
+        file_list = os.listdir(source_path)
+        for file in file_list:
+            name, ext = os.path.splitext(file)
+            if ext == '.jpg' or ext == '.png':
+                os.remove(os.path.join(source_path, file))
 
         unicode_list = self.read_text()
         
