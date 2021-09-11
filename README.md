@@ -4,7 +4,7 @@
 ### Implemented by [Junho Kim](http://bit.ly/jhkim_ai)
 
 <div align="center">
-  <img src="./assets/yethangul_teaser.jpg">
+  <img src="./assets/yethangul_teaser.png">
 </div>
 
 ## CAUTION
