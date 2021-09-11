@@ -616,9 +616,17 @@ class StarGAN_v2():
     def practice(self):
         source_path = os.path.join(self.practice_dataset_path, 'src_imgs')
 
-        # generate source image
         unicode_list = self.read_text()
+        
+        # find LineFeed letter index
+        unicode_list.append('\n')   #for check last index
+        unicode_arr = np.array(unicode_list)   
+        lf_idx = np.where(unicode_arr == '\n')[0]
+        
+        # generate source image
         F2I.save_dataset(source_path=source_path, unicode_list=unicode_list)
+
+        save_path = './{}/practice.jpg'.format(self.result_dir)
 
         source_images = glob(os.path.join(source_path, '*.png')) + glob(os.path.join(source_path, '*.jpg'))
         source_images = sorted(source_images)
@@ -671,13 +679,6 @@ class StarGAN_v2():
                 ref_img = tf.concat([ref_img, ref_img_], axis=0)
                 ref_img_domain = tf.concat([ref_img_domain, ref_img_domain_], axis=0)
 
-        save_path = './{}/practice.jpg'.format(self.result_dir)
-
-        # find LineFeed letter index
-        unicode_list.append('\n')   #for check last index
-        unicode_arr = np.array(unicode_list)   
-        lf_idx = np.where(unicode_arr == '\n')[0]
-
         self.practice_canvas(src_img, ref_img, ref_img_domain, save_path, lf_idx,
                             img_num=[len(source_images), len(reference_images)])
 
@@ -706,46 +707,38 @@ class StarGAN_v2():
         x_ref = x_ref[:ref_img_num]
         y_trg = y_trg[:ref_img_num]
 
-        # linefeed character index
-        lf1 = []
-        for i, idx in enumerate(lf_idx):
-            lf1.append(i)    
-        linefeed_idx = np.delete((lf_idx-lf1), -1)
+        # # linefeed character index
+        # lf1 = []
+        # for i, idx in enumerate(lf_idx):
+        #     lf1.append(i+1)    
+        # linefeed_idx = np.delete((lf_idx-lf1), -1)
 
         # letters per line
         lf2 = np.insert(lf_idx + 1, 0, 0)
         lf3 = np.append(lf_idx, 0)
         letters_per_line = np.delete((lf3-lf2), -1)
 
-        canvas = PIL.Image.new('RGB', (self.img_size * max(letters_per_line) + 10, self.img_size * len(letters_per_line) + 10),'white')
+        canvas = PIL.Image.new('RGB', (self.img_size * max(letters_per_line), self.img_size * len(letters_per_line)),'white')
+        
         x_ref_post = postprocess_images(x_ref)
-
-        x_ref_post_splits = []
-        for i, idx in enumerate(linefeed_idx):
-            if i==0:
-                x_ref_post_splits.append(x_ref_post[:idx])
-            elif i==len(linefeed_idx)-1:
-                x_ref_post_splits.append(x_ref_post[idx:])
-            else:
-                x_ref_post_splits.append(x_ref_post[linefeed_idx[i]:linefeed_idx[i+1]])
             
-        for x_ref_post_split in x_ref_post_splits:
-            for row, dst_image in enumerate(list(x_ref_post_split)):
-                row_images = np.stack([dst_image] * src_img_num)
-                row_images = preprocess_fit_train_image(row_images)
-                row_images_y = np.stack([y_trg[row]] * src_img_num)
+        for row, dst_image in enumerate(list(x_ref_post)):
+            row_images = np.stack([dst_image] * src_img_num)
+            row_images = preprocess_fit_train_image(row_images)
+            row_images_y = np.stack([y_trg[row]] * src_img_num)
 
-                s_trg = self.style_encoder_ema([row_images, row_images_y])
-                row_fake_images = postprocess_images(self.generator_ema([x_real, s_trg]))
-                
-                c, r, i =0, 0, 0
-                for col, image in enumerate(list(row_fake_images)):
-                    if linefeed_idx[i]==c:
-                        c=0
-                        r+=1
-                        i+=1
-                    canvas.paste(PIL.Image.fromarray(np.uint8(image), 'RGB'),
-                                ((c) * self.img_size, (r) * self.img_size))
-                    c+=1    
-
+            s_trg = self.style_encoder_ema([row_images, row_images_y])
+            row_fake_images = postprocess_images(self.generator_ema([x_real, s_trg]))
+            
+            c, r = 0, 0
+            for col, image in enumerate(list(row_fake_images)):
+                canvas.paste(PIL.Image.fromarray(np.uint8(image), 'RGB'),
+                            ((c) * self.img_size, (r) * self.img_size))
+                c+=1  
+                if letters_per_line[r]==c:
+                    c=0
+                    r+=1
+            
+            break
+                    
         canvas.save(path)
