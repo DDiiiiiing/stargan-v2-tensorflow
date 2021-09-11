@@ -81,7 +81,7 @@ python main.py --dataset yet_hangul --phase test --img_size 64
 ### Practice
 When you write yet hangul, each character must be one unicode. If not, program might read as 2 or more characters, rather than 1 character. Be careful if you copy from internet. Many yet hangul words written on internet are combinational. (ᄎᆞᆷ〮 <-- .+ㅊ+ . +ㅁ) Use this webpage would be helpful (https://www.korean.go.kr/common/oldHangeul.do)
 ```
-python main.py --dataset yet_hangul --phase practice--img_size 64
+python main.py --dataset yet_hangul --phase practice --img_size 64
 ```
 ### GenerateDataset.ipynb
 ```
